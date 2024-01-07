@@ -2,6 +2,9 @@
 //  obat.php
 
 session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 
 if  (!isset($_SESSION['username'])  ||  $_SESSION['role']  !==  'admin')  {
    header("Location:  login.php");
@@ -48,21 +51,18 @@ if  ($_SERVER['REQUEST_METHOD']  ===  'POST'  &&  isset($_POST['update']))  {
    exit();
 }
 
-//  Handle  Delete
-if  ($_SERVER['REQUEST_METHOD']  ===  'POST'  &&  isset($_POST['delete']))  {
-   $obat_id  =  $_POST['obat_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete'])) {
+   $obat_id = $_POST['obat_id'];
 
-   //  Delete  obat  from  the  table
-   $stmt  =  $conn->prepare("DELETE  FROM  obat  WHERE  id  =  :obat_id");
-   $stmt->bindParam(':obat_id',  $obat_id);
+   $stmt = $conn->prepare("DELETE FROM transaksi WHERE id_obat = :obat_id");
+   $stmt->bindParam(':obat_id', $obat_id);
    $stmt->execute();
 
-   //  Delete  transactions  related  to  the  obat
-   $stmt  =  $conn->prepare("DELETE  FROM  transaksi  WHERE  id_obat  =  :obat_id");
-   $stmt->bindParam(':obat_id',  $obat_id);
+   $stmt = $conn->prepare("DELETE FROM obat WHERE id = :obat_id");
+   $stmt->bindParam(':obat_id', $obat_id);
    $stmt->execute();
 
-   header("Location:  obat.php");
+   header("Location: obat.php");
    exit();
 }
 ?>
